@@ -176,8 +176,8 @@ function Checkout({ cart, clearCart, user }) {
 
       if (error.name === 'AbortError') {
         alert('⏱️ Request Timeout!\n\nThe server took too long to respond.\n\nYour order might have been placed. Please:\n1. Check your phone for confirmation call\n2. Wait 5 minutes for email\n3. If no contact, try again\n\nContact us: 08028265637');
-      } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-        alert('🌐 Connection Error!\n\nCannot reach the server. Please check:\n1. Your internet connection\n2. The API URL is correct\n\nCurrent API: ' + API_URL + '\n\nContact support: 08028265637');
+      } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.message.includes('Network Error')) {
+        alert('🌐 Connection Error!\n\nCannot reach the server. This is often caused by Google Script permissions.\n\nREQUIRED FIX:\n1. Ensure Google Script is deployed as "Web App"\n2. Set "Who has access" to "Anyone"\n3. Test the API URL in a private browser tab - if it asks for a Google login, it is NOT set up correctly.');
       } else {
         alert(`⚠️ Order Failed\n\nError: ${error.message}\n\nPlease try again or contact support:\nWhatsApp: 08028265637\nEmail: support@dropcart.com`);
       }

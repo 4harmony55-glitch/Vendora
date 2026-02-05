@@ -85,7 +85,7 @@ function VendorApply() {
       }
     } catch (err) {
       console.error('Application error:', err);
-      setError('Network error. Please check your internet connection and ensure the Google Script URL is correct.');
+      setError('Connection failed. This is usually due to Google Script permissions or CORS. Ensure your script is deployed as a Web App with "Who has access: Anyone". If you see this, try opening the API URL in a private browser tab; if it asks for a login, it is NOT public.');
     } finally {
       setLoading(false);
     }

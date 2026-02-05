@@ -1,8 +1,48 @@
-import React from 'react';
-import { Mail, MapPin, Briefcase, Code, Database, TrendingUp, MessageCircle, Github, Linkedin, Sparkles } from 'lucide-react';
-import { SOCIAL_LINKS } from '../config';
+import React, { useState } from 'react';
+import { Mail, MapPin, Briefcase, Code, Database, TrendingUp, MessageCircle, Github, Linkedin, Sparkles, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { SOCIAL_LINKS, API_URL } from '../config';
 
 function Support() {
+  const [testStatus, setTestStatus] = useState('idle'); // idle, testing, success, error
+  const [testMessage, setTestMessage] = useState('');
+
+  const testConnection = async () => {
+    setTestStatus('testing');
+    setTestMessage('Testing connection to Google Apps Script...');
+
+    try {
+      // Use GET for simple testing as it's less likely to hit CORS issues if properly configured
+      const response = await fetch(`${API_URL}?action=getProducts`, {
+        mode: 'cors'
+      });
+
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await response.json();
+        if (data.success) {
+          setTestStatus('success');
+          setTestMessage('✅ API Connection Successful! Your Google Script is correctly deployed and accessible.');
+        } else {
+          setTestStatus('error');
+          setTestMessage(`❌ API returned an error: ${data.error || 'Unknown error'}`);
+        }
+      } else {
+        const text = await response.text();
+        if (text.includes("do not have permission")) {
+          setTestStatus('error');
+          setTestMessage('❌ PERMISSION ERROR: Your Google Script is NOT set to "Anyone". It is currently private or restricted to Google accounts.');
+        } else {
+          setTestStatus('error');
+          setTestMessage('❌ INVALID RESPONSE: The API returned HTML instead of JSON. This usually means the Script URL is correct but the Web App is not properly deployed.');
+        }
+      }
+    } catch (error) {
+      console.error('Test error:', error);
+      setTestStatus('error');
+      setTestMessage('❌ NETWORK ERROR: Could not reach the script. This usually happens when the browser blocks the request due to missing CORS headers (caused by a private Google Script error page).');
+    }
+  };
+
   return (
     <div style={{ background: '#0a0a0a', color: 'white' }}>
       {/* Hero Section - LEGENDARY */}
@@ -238,6 +278,93 @@ function Support() {
           </div>
         </div>
       </section>
+
+          {/* Debug/Diagnostics Section */}
+          <section style={{
+            padding: 'clamp(60px, 8vw, 80px) 20px',
+            background: '#1a1a2e',
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            borderBottom: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div className="container" style={{ maxWidth: '800px' }}>
+              <SectionHeader title="System Diagnostics" />
+
+              <div style={{
+                background: 'rgba(255,255,255,0.05)',
+                padding: '32px',
+                borderRadius: '20px',
+                textAlign: 'center',
+                border: '1px solid rgba(255,255,255,0.1)'
+              }}>
+                <h3 style={{ marginBottom: '16px', fontSize: '20px' }}>API Connection Test</h3>
+                <p style={{ color: '#9ca3af', marginBottom: '24px', fontSize: '15px' }}>
+                  Use this to verify if your Google Apps Script is correctly configured.
+                </p>
+
+                <div style={{
+                  padding: '20px',
+                  background: testStatus === 'idle' ? 'rgba(0,0,0,0.2)' :
+                              testStatus === 'testing' ? 'rgba(79, 172, 254, 0.1)' :
+                              testStatus === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                  borderRadius: '12px',
+                  marginBottom: '24px',
+                  border: '1px solid',
+                  borderColor: testStatus === 'idle' ? 'rgba(255,255,255,0.1)' :
+                               testStatus === 'testing' ? '#4facfe' :
+                               testStatus === 'success' ? '#10B981' : '#EF4444',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  justifyContent: 'center',
+                  minHeight: '60px'
+                }}>
+                  {testStatus === 'idle' && <Activity size={20} color="#9ca3af" />}
+                  {testStatus === 'testing' && <div className="spinning" style={{ width: '20px', height: '20px', border: '3px solid #4facfe', borderTopColor: 'transparent', borderRadius: '50%' }} />}
+                  {testStatus === 'success' && <CheckCircle2 size={20} color="#10B981" />}
+                  {testStatus === 'error' && <AlertCircle size={20} color="#EF4444" />}
+
+                  <span style={{
+                    fontSize: '15px',
+                    fontWeight: '600',
+                    color: testStatus === 'success' ? '#10B981' : testStatus === 'error' ? '#EF4444' : 'white'
+                  }}>
+                    {testMessage || 'Click the button below to start test'}
+                  </span>
+                </div>
+
+                <button
+                  onClick={testConnection}
+                  disabled={testStatus === 'testing'}
+                  style={{
+                    padding: '14px 28px',
+                    background: testStatus === 'testing' ? '#4b5563' : 'linear-gradient(135deg, #4facfe, #00f2fe)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontWeight: '700',
+                    cursor: testStatus === 'testing' ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {testStatus === 'testing' ? 'Testing...' : 'Run Connection Test'}
+                </button>
+
+                {testStatus === 'error' && (
+                  <div style={{ marginTop: '24px', textAlign: 'left', fontSize: '14px', color: '#d1d5db', lineHeight: '1.6' }}>
+                    <p style={{ fontWeight: '700', color: '#EF4444', marginBottom: '8px' }}>How to fix this:</p>
+                    <ol style={{ paddingLeft: '20px' }}>
+                      <li>Open your Google Apps Script editor.</li>
+                      <li>Click <strong>Deploy</strong> &gt; <strong>Manage deployments</strong>.</li>
+                      <li>Click the <strong>Pencil icon</strong> to edit the current deployment.</li>
+                      <li>Set <strong>Execute as:</strong> to <strong>Me</strong>.</li>
+                      <li>Set <strong>Who has access:</strong> to <strong>Anyone</strong>.</li>
+                      <li>Click <strong>Deploy</strong> and use the new URL in config.js.</li>
+                    </ol>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
 
       {/* Services */}
       <section style={{

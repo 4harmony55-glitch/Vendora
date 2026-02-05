@@ -54,7 +54,7 @@ function VendorApply() {
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({
           action: 'applyAsVendor',
           businessName: formData.businessName,

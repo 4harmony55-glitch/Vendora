@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  
+  <!-- Primary Meta Tags -->
+  <title>Vendora - Revenue Infrastructure for Campus Vendors</title>
+  <meta name="title" content="Vendora - Revenue Infrastructure for Campus Vendors">
+  <meta name="description" content="Vendora handles your storefront, orders, and delivery so you can focus on selling more. Join campus vendors growing their business at University of Ibadan.">
+  <meta name="keywords" content="campus vendors, university of ibadan, sell on campus, vendor platform, e-commerce, campus commerce, vendora">
+  <meta name="author" content="Vendora">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#6366F1">
+  <meta name="msapplication-TileColor" content="#6366F1">
+  
+  <!-- Mobile Web App -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vendora">
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vendora.vercel.app/">
+  <meta property="og:title" content="Vendora - Revenue Infrastructure for Campus Vendors">
+  <meta property="og:description" content="Sell more with managed storefront, orders, and delivery. Join campus vendors at University of Ibadan.">
+  <meta property="og:image" content="https://vendora.vercel.app/og-image.jpg">
+  <meta property="og:site_name" content="Vendora">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://vendora.vercel.app/">
+  <meta property="twitter:title" content="Vendora - Campus Commerce Platform">
+  <meta property="twitter:description" content="Revenue infrastructure for campus vendors">
+  <meta property="twitter:image" content="https://vendora.vercel.app/og-image.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  
+  <!-- Fonts - Optimized Loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Critical CSS - Above the Fold */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Merriweather', serif;
+      background-color: #FFF8E7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    /* Loading Screen - Only shows while root is truly empty */
+    #root:empty::before {
+      content: "";
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
+      background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+    }
+    
+    #root:empty::after {
+      content: "Vendora";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(32px, 8vw, 48px);
+      font-weight: 900;
+      color: white;
+      font-family: 'Playfair Display', serif;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+      animation: pulse 2s ease-in-out infinite;
+      z-index: 10000;
+    }
+    
+    /* Hide loading screen once React renders */
+    #root:not(:empty) {
+      display: block !important;
+    }
+    
+    #root:not(:empty)::before,
+    #root:not(:empty)::after {
+      display: none !important;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.05);
+      }
+    }
+    
+    /* Prevent Layout Shift */
+    #root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Spinner for loading states */
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #f3f4f6;
+      border-top: 5px solid #6366F1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .spinning {
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <noscript>
+    <div style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 40px;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      color: white;
+    ">
+      <h1 style="font-size: clamp(24px, 6vw, 36px); margin-bottom: 20px;">
+        JavaScript Required
+      </h1>
+      <p style="font-size: clamp(16px, 3vw, 18px); max-width: 500px; line-height: 1.6;">
+        You need to enable JavaScript to run Vendora.
+      </p>
+      <p style="font-size: clamp(14px, 2.5vw, 16px); margin-top: 16px; opacity: 0.9;">
+        Please enable JavaScript in your browser settings and reload the page.
+      </p>
+    </div>
+  </noscript>
+  
+  <div id="root"></div>
+  
+  <script>
+    // Remove loading class when app loads
+    window.addEventListener('load', function() {
+      document.body.classList.add('loaded');
+    });
+  </script>
+</body>
+</html>

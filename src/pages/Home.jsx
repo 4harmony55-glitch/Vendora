@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, Zap, Shield, BarChart3, Store, ArrowRight, CheckCircle } from 'lucide-react';
+import { TrendingUp, Zap, Shield, BarChart3, ArrowRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { API_URL, PRICING_TIERS, APP_INFO } from '../config';
+import { API_URL, APP_INFO } from '../config';
 
 function Home({ addToCart, addToWishlist }) {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [featuredVendors, setFeaturedVendors] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,13 +21,6 @@ function Home({ addToCart, addToWishlist }) {
       const productsData = await productsRes.json();
       if (productsData.success) {
         setProducts(productsData.products.slice(0, 8)); // Show first 8
-      }
-
-      // Fetch featured vendors
-      const vendorsRes = await fetch(`${API_URL}?action=getFeaturedVendors`);
-      const vendorsData = await vendorsRes.json();
-      if (vendorsData.success) {
-        setFeaturedVendors(vendorsData.vendors);
       }
 
       // Fetch analytics for social proof

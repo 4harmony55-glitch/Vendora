@@ -131,16 +131,23 @@ function Checkout({ cart, clearCart, user }) {
       console.log('📥 Response status:', response.status);
       console.log('📥 Response ok:', response.ok);
 
-      if (!response.ok) {
+      const contentType = response.headers.get("content-type");
+      let result;
+
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        result = await response.json();
+      } else {
         const errorText = await response.text();
         console.error('❌ Response error:', errorText);
-        throw new Error(`Server error (${response.status}): ${errorText}`);
+        if (errorText.includes("do not have permission")) {
+          throw new Error("Google Script Permission Error: Please ensure the Apps Script is deployed as a Web App with 'Who has access: Anyone'.");
+        }
+        throw new Error(`Server returned non-JSON response. The script may not be deployed correctly.`);
       }
 
-      const result = await response.json();
       console.log('📥 Response data:', result);
       
-      if (result.success) {
+      if (result && result.success) {
         // Check email status
         const emailStatus = result.emailStatus;
         let emailWarning = '';

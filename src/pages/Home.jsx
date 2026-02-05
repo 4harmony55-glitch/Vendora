@@ -18,16 +18,22 @@ function Home({ addToCart, addToWishlist }) {
     try {
       // Fetch products
       const productsRes = await fetch(`${API_URL}?action=getProducts`);
-      const productsData = await productsRes.json();
-      if (productsData.success) {
-        setProducts(productsData.products.slice(0, 8)); // Show first 8
+      const productsContentType = productsRes.headers.get("content-type");
+      if (productsContentType && productsContentType.indexOf("application/json") !== -1) {
+        const productsData = await productsRes.json();
+        if (productsData.success) {
+          setProducts(productsData.products.slice(0, 8)); // Show first 8
+        }
       }
 
       // Fetch analytics for social proof
       const analyticsRes = await fetch(`${API_URL}?action=getAnalytics`);
-      const analyticsData = await analyticsRes.json();
-      if (analyticsData.success) {
-        setAnalytics(analyticsData.analytics);
+      const analyticsContentType = analyticsRes.headers.get("content-type");
+      if (analyticsContentType && analyticsContentType.indexOf("application/json") !== -1) {
+        const analyticsData = await analyticsRes.json();
+        if (analyticsData.success) {
+          setAnalytics(analyticsData.analytics);
+        }
       }
 
       setLoading(false);

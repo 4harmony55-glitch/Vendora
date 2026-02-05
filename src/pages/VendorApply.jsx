@@ -66,17 +66,26 @@ function VendorApply() {
         })
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        setVendorId(data.vendorId);
-        setSubmitted(true);
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await response.json();
+        if (data.success) {
+          setVendorId(data.vendorId);
+          setSubmitted(true);
+        } else {
+          setError(data.error || 'Application failed. Please try again.');
+        }
       } else {
-        setError(data.error || 'Application failed. Please try again.');
+        const text = await response.text();
+        if (text.includes("do not have permission")) {
+          setError("Google Script Permission Error: Please ensure the Apps Script is deployed as a Web App with 'Who has access: Anyone'.");
+        } else {
+          setError("Invalid response from server. The Google Script may not be deployed correctly as a Web App.");
+        }
       }
     } catch (err) {
       console.error('Application error:', err);
-      setError('Network error. Please check your connection and try again.');
+      setError('Network error. Please check your internet connection and ensure the Google Script URL is correct.');
     } finally {
       setLoading(false);
     }

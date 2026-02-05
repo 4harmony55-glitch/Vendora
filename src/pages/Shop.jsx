@@ -17,11 +17,16 @@ function ShopPage({ addToCart, addToWishlist }) {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}?action=getProductsByCategory&category=${encodeURIComponent(category)}`);
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
       
-      if (data.success) {
-        setProducts(data.products);
-        setFilteredProducts(data.products);
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await res.json();
+        if (data.success) {
+          setProducts(data.products);
+          setFilteredProducts(data.products);
+        }
+      } else {
+        console.error('Expected JSON but got:', contentType);
       }
     } catch (error) {
       console.error('Error fetching products:', error);

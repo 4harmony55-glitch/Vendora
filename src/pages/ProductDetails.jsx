@@ -17,11 +17,14 @@ function ProductDetails({ addToCart, addToWishlist }) {
   const fetchRecommendations = useCallback(async (category) => {
     try {
       const res = await fetch(`${API_URL}?action=getProductsByCategory&category=${encodeURIComponent(category)}`);
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
       
-      if (data.success) {
-        const filtered = data.products.filter(p => p.id !== id);
-        setRecommendations(filtered);
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await res.json();
+        if (data.success) {
+          const filtered = data.products.filter(p => p.id !== id);
+          setRecommendations(filtered);
+        }
       }
     } catch (error) {
       console.error('Error fetching recommendations:', error);
@@ -32,11 +35,14 @@ function ProductDetails({ addToCart, addToWishlist }) {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}?action=getProductById&id=${id}`);
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
       
-      if (data.success) {
-        setProduct(data.product);
-        fetchRecommendations(data.product.category);
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await res.json();
+        if (data.success) {
+          setProduct(data.product);
+          fetchRecommendations(data.product.category);
+        }
       }
     } catch (error) {
       console.error('Error fetching product:', error);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Store, Package } from 'lucide-react';
+import { ShoppingCart, Menu, X, Store } from 'lucide-react';
 
 function Navbar({ cartCount = 0 }) {
   const navigate = useNavigate();
